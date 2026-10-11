@@ -11,13 +11,13 @@
   "theme_color": "#fff3f8",
   "icons": [
     {
-      "src": "./E2F0C5E6-ADCB-4681-AAE5-B51BBE62C060.png",
+      "src": "./E2F0C5E6-ADCB-4681-AAE5-B51BBE62C060.jpeg",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "./E2F0C5E6-ADCB-4681-AAE5-B51BBE62C060.png",
+      "src": "./E2F0C5E6-ADCB-4681-AAE5-B51BBE62C060.jpeg",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
