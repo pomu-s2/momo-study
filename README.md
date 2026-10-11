@@ -1,2 +1,26 @@
-# momo-study
-🍑 A cute study planner to organize daily goals and track study progress.
+# momo study ♡ — 公開準備版
+
+iPhoneのSafariで開き、「ホーム画面に追加」してアプリのように使うためのPWA初期版です。
+
+## 含まれるもの
+- `index.html` — アプリ本体（HTML/CSS/JavaScript）
+- `manifest.json` — ホーム画面表示用のPWA設定
+- `sw.js` — アプリ本体をキャッシュするService Worker
+- `icons/` — アプリアイコン
+
+## 重要な注意
+- これは公開用ファイル一式であり、まだ公開済みのURLではありません。
+- `localStorage` を使った端末・ブラウザ内保存です。別端末への自動同期やログイン機能はありません。
+- SafariのWebサイトデータを消すと記録が消える可能性があります。アプリ内「設定」から定期的にバックアップを書き出してください。
+- PWA機能を有効にするにはHTTPS対応のホスティング先へ配置してください。Service Workerは通常、HTTPS（またはlocalhost）で動作します。
+- 公開前に、iPhoneの実機でタイマーのバックグラウンド動作、保存、バックアップ復元、オフライン時の表示をテストしてください。
+
+## 公開の次の手順（例：GitHub Pages）
+1. GitHubにサインインし、新しいリポジトリを作成（公開リポジトリでよければPublic）。
+2. このZIPを解凍し、中身の `index.html`、`manifest.json`、`sw.js`、`icons/` をリポジトリのルートへアップロード。
+3. リポジトリの Settings → Pages を開き、公開元ブランチと `/ (root)` を選んで保存。
+4. 発行された `https://...` のURLをiPhoneのSafariで開く。
+5. Safariの共有メニュー →「ホーム画面に追加」。追加後、ホーム画面から起動して動作確認。
+6. 更新時はファイルを再アップロード。Service Workerのキャッシュ更新に少し時間がかかる場合があります。
+
+GitHubの画面や名称は変更されることがあります。公開URLを作る前に、公開リポジトリに個人情報や実際の成績などを含めないでください。

@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#fff3f8">
+  <meta name="description" content="リボンと一緒に、毎日の勉強と目標を記録する momo study。">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="momo study">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="apple-touch-icon" href="./icons/icon-192.png">
+  <title>momo study ♡</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --pink: #f08ab8;
+      --pink-deep: #c65b91;
+      --pink-soft: #ffe3ef;
+      --rose: #fff3f8;
+      --lavender: #eee8ff;
+      --cream: #fffdfd;
+      --ink: #53394a;
+      --muted: #967b8b;
+      --line: #f4dce7;
+      --shadow: 0 10px 28px rgba(192, 102, 146, .12);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif;
+      background: linear-gradient(160deg, #fff5fa 0%, #fffafd 50%, #f7f3ff 100%);
+      color: var(--ink);
+      min-height: 100vh;
+      padding-bottom: calc(88px + env(safe-area-inset-bottom));
+    }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    .app { max-width: 760px; margin: 0 auto; padding: 20px 16px 28px; }
+    header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .brand-icon { width: 48px; height: 48px; border-radius: 17px; background: white; box-shadow: var(--shadow); display: grid; place-items: center; font-size: 27px; }
+    h1 { font-size: 23px; margin: 0; letter-spacing: -.5px; }
+    .subtitle { font-size: 12px; color: var(--muted); margin-top: 3px; }
+    .date-pill { background: white; border: 1px solid var(--line); border-radius: 999px; padding: 8px 11px; color: var(--pink-deep); font-size: 12px; white-space: nowrap; }
+    .hero { background: linear-gradient(135deg, #ffd9e9, #f1e5ff); border-radius: 25px; padding: 20px; position: relative; overflow: hidden; box-shadow: var(--shadow); margin-bottom: 15px; }
+    .hero:after { content: "୨୧"; position: absolute; right: 15px; top: 8px; font-size: 52px; color: rgba(255,255,255,.78); transform: rotate(-12deg); }
+    .eyebrow { font-size: 12px; color: #a65380; font-weight: 700; }
+    .hero h2 { font-size: 23px; margin: 8px 0 5px; max-width: 75%; }
+    .hero p { font-size: 13px; margin: 0; color: #835d76; line-height: 1.6; }
+    .stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 15px; }
+    .stat, .panel { background: rgba(255,255,255,.92); border: 1px solid rgba(244,220,231,.9); border-radius: 20px; box-shadow: var(--shadow); }
+    .stat { padding: 13px 10px; text-align: center; }
+    .stat .emoji { font-size: 19px; }
+    .stat strong { display: block; font-size: 20px; margin: 5px 0 1px; }
+    .stat span { color: var(--muted); font-size: 11px; }
+    .tabs { display: flex; gap: 7px; overflow-x: auto; padding: 3px 0 13px; scrollbar-width: none; }
+    .tabs button { border: 1px solid var(--line); border-radius: 999px; background: white; color: var(--muted); padding: 10px 14px; white-space: nowrap; font-size: 13px; }
+    .tabs button.active { background: var(--pink); color: white; border-color: var(--pink); box-shadow: 0 5px 13px #f08ab833; }
+    .panel { padding: 17px; margin-bottom: 13px; }
+    .panel h3 { font-size: 16px; margin: 0 0 13px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+    .panel h3 small { font-size: 11px; color: var(--muted); font-weight: 500; }
+    .row { display: flex; align-items: center; gap: 8px; }
+    .stack { display: grid; gap: 9px; }
+    input, select { min-width: 0; border: 1px solid var(--line); background: #fffafd; border-radius: 12px; padding: 11px 12px; color: var(--ink); outline: none; width: 100%; }
+    input:focus, select:focus { border-color: var(--pink); box-shadow: 0 0 0 3px #f08ab822; }
+    .btn { border: 0; border-radius: 13px; background: var(--pink); color: white; padding: 11px 14px; font-weight: 700; white-space: nowrap; }
+    .btn.secondary { background: var(--pink-soft); color: var(--pink-deep); }
+    .btn.ghost { background: white; color: var(--pink-deep); border: 1px solid var(--line); }
+    .btn.small { padding: 7px 10px; font-size: 12px; }
+    .task { display: flex; align-items: center; gap: 10px; padding: 11px 0; border-bottom: 1px solid #faedf3; }
+    .task:last-child { border-bottom: 0; }
+    .task input[type=checkbox] { width: 19px; height: 19px; accent-color: var(--pink); flex: 0 0 auto; }
+    .task-name { flex: 1; font-size: 14px; overflow-wrap: anywhere; }
+    .task.done .task-name { color: #b6a1ae; text-decoration: line-through; }
+    .tag { font-size: 10px; color: var(--pink-deep); background: #fff0f6; padding: 5px 7px; border-radius: 999px; }
+    .timer-face { text-align: center; padding: 10px 0 16px; }
+    .timer-ring { width: 188px; height: 188px; margin: 0 auto 15px; border-radius: 50%; background: conic-gradient(var(--pink) var(--progress, 0%), #ffe9f2 0); display: grid; place-items: center; position: relative; }
+    .timer-ring:before { content: ""; position: absolute; inset: 10px; border-radius: 50%; background: white; }
+    .timer-inner { position: relative; z-index: 1; }
+    .timer-value { font-size: 35px; font-weight: 750; letter-spacing: 1px; }
+    .timer-label { color: var(--muted); font-size: 12px; margin-top: 4px; }
+    .quick-times { display: flex; justify-content: center; gap: 7px; margin: 10px 0 15px; }
+    .quick-times button { border: 1px solid var(--line); border-radius: 999px; background: white; color: var(--pink-deep); padding: 7px 12px; font-size: 12px; }
+    .empty { text-align: center; padding: 20px 8px; color: var(--muted); font-size: 13px; }
+    .calendar-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
+    .weekday, .day { text-align: center; font-size: 12px; }
+    .weekday { color: var(--muted); padding: 5px 0; }
+    .day { border: 1px solid transparent; border-radius: 12px; min-height: 42px; background: #fff8fb; padding: 6px 0 3px; }
+    .day.today { border-color: var(--pink); }
+    .day.selected { background: var(--pink); color: white; }
+    .day .dot { display: block; height: 5px; width: 5px; border-radius: 50%; background: var(--pink-deep); margin: 4px auto 0; }
+    .day.selected .dot { background: white; }
+    .score-bars { display: flex; align-items: end; gap: 10px; height: 145px; padding: 10px 4px 0; border-bottom: 1px solid var(--line); }
+    .score-col { flex: 1; min-width: 0; height: 100%; display: flex; flex-direction: column; justify-content: end; align-items: center; gap: 5px; }
+    .bar { width: min(32px, 70%); min-height: 3px; background: linear-gradient(#f6a8cb, #d96ea5); border-radius: 9px 9px 3px 3px; }
+    .score-col small { font-size: 10px; color: var(--muted); text-align: center; overflow-wrap: anywhere; }
+    .score-col b { font-size: 10px; }
+    .rewards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .reward { text-align: center; padding: 12px 5px; border-radius: 15px; background: #fff7fb; border: 1px solid var(--line); }
+    .reward .medal { font-size: 25px; filter: grayscale(1); opacity: .45; }
+    .reward.unlocked .medal { filter: none; opacity: 1; }
+    .reward strong { display: block; font-size: 11px; margin-top: 5px; }
+    .reward small { color: var(--muted); font-size: 10px; }
+    .notice { font-size: 11px; line-height: 1.6; color: var(--muted); background: #fff8fb; border-radius: 12px; padding: 10px 12px; }
+    .hidden { display: none !important; }
+    .bottom-note { text-align: center; font-size: 11px; color: #b79aaa; padding: 8px; }
+    @media (min-width: 620px) { .app { padding: 28px 24px; } .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; align-items: start; } .content-grid .panel { margin-bottom: 0; } }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <div class="brand">
+        <div class="brand-icon">🎀</div>
+        <div><h1>momo study <span style="color:#ef8db8">♡</span></h1><div class="subtitle">little steps, lovely days</div></div>
+      </div>
+      <div class="date-pill" id="todayPill"></div>
+    </header>
+
+    <section class="hero">
+      <div class="eyebrow">♡ TODAY'S LITTLE GOAL</div>
+      <h2>今日も、ちょっとずつ。</h2>
+      <p id="heroText">小さな積み重ねが、未来の自分へのプレゼント。</p>
+    </section>
+
+    <section class="stats">
+      <div class="stat"><div class="emoji">⏳</div><strong id="todayMinutes">0</strong><span>今日の勉強（分）</span></div>
+      <div class="stat"><div class="emoji">🔥</div><strong id="streakCount">0</strong><span>連続勉強日数</span></div>
+      <div class="stat"><div class="emoji">🌷</div><strong id="taskCount">0/0</strong><span>今日のタスク</span></div>
+    </section>
+
+    <nav class="tabs" aria-label="メインメニュー">
+      <button class="active" data-tab="home">🏠 ホーム</button>
+      <button data-tab="timer">⏱ タイマー</button>
+      <button data-tab="calendar">🗓 カレンダー</button>
+      <button data-tab="scores">📈 テスト記録</button>
+      <button data-tab="rewards">🎁 ごほうび</button>
+      <button data-tab="settings">⚙️ 設定</button>
+    </nav>
+
+    <section id="tab-home">
+      <div class="content-grid">
+        <div class="panel">
+          <h3>今日のTo-do <small>できたらチェック ♡</small></h3>
+          <form id="taskForm" class="row">
+            <input id="taskInput" maxlength="90" placeholder="例：英単語を20個覚える" aria-label="タスク名" required>
+            <button class="btn" type="submit">追加</button>
+          </form>
+          <div id="taskList" style="margin-top:10px"></div>
+        </div>
+        <div class="panel">
+          <h3>今日の目標 <small>自分のペースでね</small></h3>
+          <div class="stack">
+            <label style="font-size:12px;color:var(--muted)">目標勉強時間（分）</label>
+            <div class="row"><input id="goalInput" type="number" min="1" max="1440" value="60"><button class="btn secondary" id="saveGoal">保存</button></div>
+            <div style="height:9px;background:#ffe8f1;border-radius:99px;overflow:hidden"><div id="goalProgress" style="height:100%;width:0;background:linear-gradient(90deg,#f5a2c6,#cba9f8);border-radius:99px"></div></div>
+            <div id="goalCaption" style="font-size:12px;color:var(--muted)">0 / 60 分</div>
+          </div>
+          <div class="notice" style="margin-top:15px">完璧じゃなくて大丈夫。昨日より一歩進めたら花まる！ 🌸</div>
+        </div>
+      </div>
+      <div class="panel" style="margin-top:13px">
+        <h3>最近の勉強記録 <small>直近5件</small></h3>
+        <div id="recentSessions"></div>
+      </div>
+    </section>
+
+    <section id="tab-timer" class="hidden">
+      <div class="panel">
+        <h3>集中タイマー <small>勉強時間を記録しよう</small></h3>
+        <div class="timer-face">
+          <div class="timer-ring" id="timerRing" style="--progress:0%">
+            <div class="timer-inner"><div class="timer-value" id="timerValue">25:00</div><div class="timer-label" id="timerStatus">準備できたらスタート ♡</div></div>
+          </div>
+          <div class="quick-times"><button data-minutes="15">15分</button><button data-minutes="25">25分</button><button data-minutes="45">45分</button><button data-minutes="60">60分</button></div>
+          <div class="row" style="justify-content:center;flex-wrap:wrap"><button class="btn" id="timerStart">▶ スタート</button><button class="btn secondary" id="timerPause">一時停止</button><button class="btn ghost" id="timerReset">リセット</button></div>
+        </div>
+        <div class="notice">タイマーを完了すると勉強記録に追加されるよ。途中で「リセット」した時間は記録されません。</div>
+      </div>
+    </section>
+
+    <section id="tab-calendar" class="hidden">
+      <div class="panel">
+        <div class="calendar-head"><button class="btn ghost small" id="prevMonth">‹ 前月</button><h3 id="monthTitle" style="margin:0"></h3><button class="btn ghost small" id="nextMonth">次月 ›</button></div>
+        <div class="calendar-grid" id="calendarGrid"></div>
+      </div>
+      <div class="panel"><h3 id="selectedDateTitle">選択した日の記録</h3><div id="dayDetails"></div></div>
+      <div class="panel"><h3>勉強履歴 <small>新しい順</small></h3><div id="historyList"></div></div>
+    </section>
+
+    <section id="tab-scores" class="hidden">
+      <div class="panel">
+        <h3>テスト結果を記録 <small>点数の変化を見よう</small></h3>
+        <form id="scoreForm" class="stack">
+          <input id="scoreSubject" maxlength="40" placeholder="教科（例：英語）" required>
+          <div class="row"><input id="scoreName" maxlength="50" placeholder="テスト名（例：中間テスト）" required><input id="scoreValue" type="number" min="0" max="100" placeholder="点数" required></div>
+          <div class="row"><input id="scoreDate" type="date" required><button class="btn" type="submit">記録する</button></div>
+        </form>
+      </div>
+      <div class="panel"><h3>点数グラフ <small>100点満点</small></h3><div id="scoreChart"></div></div>
+      <div class="panel"><h3>記録一覧</h3><div id="scoreList"></div></div>
+    </section>
+
+    <section id="tab-rewards" class="hidden">
+      <div class="panel"><h3>がんばりの証 🎀 <small>勉強すると増えていくよ</small></h3><div class="rewards" id="rewardGrid"></div></div>
+      <div class="panel"><h3>勉強データ</h3><div id="summaryStats"></div></div>
+    </section>
+
+    <section id="tab-settings" class="hidden">
+      <div class="panel">
+        <h3>データのバックアップ <small>大切な記録を守ろう</small></h3>
+        <p style="font-size:13px;line-height:1.7;color:var(--muted)">記録はこのブラウザ内に保存されます。端末やブラウザのデータを消すと失われる場合があるため、ときどきバックアップを保存してね。</p>
+        <div class="row" style="flex-wrap:wrap"><button class="btn" id="exportData">バックアップを書き出す</button><label class="btn secondary" for="importFile">バックアップを読み込む</label><input class="hidden" id="importFile" type="file" accept="application/json,.json"></div>
+        <div style="margin-top:15px"><button class="btn ghost" id="clearData">すべての記録を削除</button></div>
+        <div id="storageStatus" class="notice" style="margin-top:13px">この端末のブラウザに保存します。</div>
+      </div>
+      <div class="panel">
+        <h3>アプリについて</h3>
+        <p style="font-size:13px;line-height:1.8;color:var(--muted)">momo study ♡ は、勉強時間・To-do・テスト結果を自分で記録するための学習プランナーです。アカウントやクラウド同期はまだありません。公開用の初期版です。</p>
+      </div>
+    </section>
+    <div class="bottom-note">made with ♡ for your future self · momo study</div>
+  </main>
+
+  <script>
+    const KEY = "momo-study-pwa-v1";
+    const $ = (id) => document.getElementById(id);
+    const dateKey = (d = new Date()) => {
+      const x = new Date(d);
+      return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,"0")}-${String(x.getDate()).padStart(2,"0")}`;
+    };
+    const prettyDate = (key) => {
+      if (!key) return "";
+      const d = new Date(key + "T12:00:00");
+      return `${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()}`;
+    };
+    const defaultData = () => ({ version: 1, goal: 60, tasks: [], sessions: [], scores: [] });
+    let data = defaultData();
+    let selectedDate = dateKey();
+    let monthCursor = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+    let timerDuration = 25 * 60;
+    let timerRemaining = timerDuration;
+    let timerStartedAt = null;
+    let timerElapsedBeforePause = 0;
+    let timerInterval = null;
+
+    try {
+      const saved = localStorage.getItem(KEY);
+      if (saved) data = { ...defaultData(), ...JSON.parse(saved) };
+      $("storageStatus").textContent = "このブラウザのローカル保存を使用しています。バックアップも定期的に保存してね。";
+    } catch (e) {
+      $("storageStatus").textContent = "ブラウザ保存を利用できません。記録を失わないよう、バックアップ機能を使ってね。";
+    }
+    function persist() {
+      try {
+        localStorage.setItem(KEY, JSON.stringify(data));
+        $("storageStatus").textContent = "保存済み：このブラウザ内に記録されています。";
+      } catch (e) {
+        $("storageStatus").textContent = "自動保存できませんでした。バックアップを書き出してね。";
+      }
+    }
+    function switchTab(tab) {
+      document.querySelectorAll(".tabs button").forEach(b => b.classList.toggle("active", b.dataset.tab === tab));
+      ["home","timer","calendar","scores","rewards","settings"].forEach(t => $("tab-"+t).classList.toggle("hidden", t !== tab));
+      renderAll();
+    }
+    document.querySelectorAll(".tabs button").forEach(b => b.addEventListener("click", () => switchTab(b.dataset.tab)));
+    function minutesFor(key) { return data.sessions.filter(s => s.date === key).reduce((sum,s) => sum + s.minutes, 0); }
+    function studyDates() { return [...new Set(data.sessions.map(s => s.date))].sort(); }
+    function currentStreak() {
+      const days = new Set(studyDates());
+      let cursor = new Date();
+      if (!days.has(dateKey(cursor))) cursor.setDate(cursor.getDate()-1);
+      let count = 0;
+      while (days.has(dateKey(cursor))) { count++; cursor.setDate(cursor.getDate()-1); }
+      return count;
+    }
+    function renderHeader() {
+      $("todayPill").textContent = new Date().toLocaleDateString("ja-JP",{month:"long",day:"numeric",weekday:"short"});
+      $("todayMinutes").textContent = minutesFor(dateKey());
+      $("streakCount").textContent = currentStreak();
+      const todayTasks = data.tasks.filter(t => t.date === dateKey());
+      $("taskCount").textContent = `${todayTasks.filter(t=>t.done).length}/${todayTasks.length}`;
+      $("goalInput").value = data.goal;
+      const m = minutesFor(dateKey());
+      $("goalProgress").style.width = `${Math.min(100, m / Math.max(1,data.goal) * 100)}%`;
+      $("goalCaption").textContent = `${m} / ${data.goal} 分`;
+      $("heroText").textContent = m >= data.goal ? "今日の目標クリア！自分をたくさん褒めてね。 🌸" : "小さな積み重ねが、未来の自分へのプレゼント。";
+    }
+    function renderTasks() {
+      const list = $("taskList");
+      const tasks = data.tasks.filter(t => t.date === dateKey());
+      if (!tasks.length) { list.innerHTML = '<div class="empty">今日のタスクをひとつ追加してみよう ♡</div>'; return; }
+      list.innerHTML = "";
+      tasks.forEach(task => {
+        const el = document.createElement("div"); el.className = "task" + (task.done ? " done" : "");
+        const cb = document.createElement("input"); cb.type = "checkbox"; cb.checked = task.done; cb.setAttribute("aria-label","完了");
+        cb.addEventListener("change", () => { task.done = cb.checked; persist(); renderAll(); });
+        const name = document.createElement("div"); name.className = "task-name"; name.textContent = task.text;
+        const del = document.createElement("button"); del.className = "btn ghost small"; del.textContent = "削除"; del.addEventListener("click", () => { data.tasks = data.tasks.filter(t => t.id !== task.id); persist(); renderAll(); });
+        el.append(cb,name,del); list.append(el);
+      });
+    }
+    $("taskForm").addEventListener("submit", e => {
+      e.preventDefault(); const text = $("taskInput").value.trim(); if (!text) return;
+      data.tasks.push({id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()), text, date: dateKey(), done:false});
+      $("taskInput").value = ""; persist(); renderAll();
+    });
+    $("saveGoal").addEventListener("click", () => { data.goal = Math.max(1, Math.min(1440, Number($("goalInput").value)||60)); persist(); renderAll(); });
+    function renderSessions() {
+      const recent = [...data.sessions].sort((a,b)=>b.startedAt-a.startedAt).slice(0,5);
+      const history = [...data.sessions].sort((a,b)=>b.startedAt-a.startedAt);
+      const markup = arr => arr.length ? arr.map(s=>`<div class="task"><span>🌸</span><div class="task-name">${prettyDate(s.date)} · ${escapeHTML(s.label || "勉強")}</div><span class="tag">${s.minutes}分</span></div>`).join("") : '<div class="empty">勉強を記録すると、ここに表示されるよ。</div>';
+      $("recentSessions").innerHTML = markup(recent);
+      $("historyList").innerHTML = markup(history);
+    }
+    function escapeHTML(str) { return String(str).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+    function renderCalendar() {
+      const y=monthCursor.getFullYear(), m=monthCursor.getMonth();
+      $("monthTitle").textContent = `${y}年 ${m+1}月`;
+      const grid=$("calendarGrid"); grid.innerHTML="";
+      ["日","月","火","水","木","金","土"].forEach(w=>{const e=document.createElement("div");e.className="weekday";e.textContent=w;grid.append(e);});
+      const first=new Date(y,m,1).getDay(), days=new Date(y,m+1,0).getDate();
+      for(let i=0;i<first;i++){const e=document.createElement("div");grid.append(e);}
+      for(let d=1;d<=days;d++){
+        const key=dateKey(new Date(y,m,d)), e=document.createElement("button"); e.className="day"+(key===dateKey()?" today":"")+(key===selectedDate?" selected":"");
+        e.textContent=d;
+        if(minutesFor(key)>0){const dot=document.createElement("span");dot.className="dot";e.append(dot);}
+        e.addEventListener("click",()=>{selectedDate=key;renderCalendar();}); grid.append(e);
+      }
+      $("selectedDateTitle").textContent = `${prettyDate(selectedDate)} の記録`;
+      const sessions=data.sessions.filter(s=>s.date===selectedDate);
+      const tasks=data.tasks.filter(t=>t.date===selectedDate);
+      $("dayDetails").innerHTML = `<div class="notice">勉強時間：<strong>${minutesFor(selectedDate)}分</strong> · タスク：${tasks.filter(t=>t.done).length}/${tasks.length} 完了</div>` + (sessions.length ? sessions.map(s=>`<div class="task"><span>⏱</span><div class="task-name">${escapeHTML(s.label||"勉強")}</div><span class="tag">${s.minutes}分</span></div>`).join("") : '<div class="empty">この日の勉強記録はまだないよ。</div>');
+    }
+    $("prevMonth").addEventListener("click",()=>{monthCursor.setMonth(monthCursor.getMonth()-1);renderCalendar();});
+    $("nextMonth").addEventListener("click",()=>{monthCursor.setMonth(monthCursor.getMonth()+1);renderCalendar();});
+    function renderScores() {
+      const scores=[...data.scores].sort((a,b)=>a.date.localeCompare(b.date));
+      if(!scores.length) $("scoreChart").innerHTML='<div class="empty">テスト結果を記録するとグラフが表示されるよ 📈</div>';
+      else {
+        const chart=document.createElement("div"); chart.className="score-bars";
+        scores.slice(-10).forEach(s=>{
+          const col=document.createElement("div"); col.className="score-col";
+          const val=document.createElement("b"); val.textContent=s.value;
+          const bar=document.createElement("div"); bar.className="bar"; bar.style.height=Math.max(3,s.value)+"%"; bar.title=`${s.subject} ${s.name}: ${s.value}点`;
+          const lab=document.createElement("small"); lab.textContent=s.subject;
+          col.append(val,bar,lab); chart.append(col);
+        });
+        $("scoreChart").innerHTML=""; $("scoreChart").append(chart);
+      }
+      const sorted=[...data.scores].sort((a,b)=>b.date.localeCompare(a.date));
+      $("scoreList").innerHTML=sorted.length?sorted.map(s=>`<div class="task"><span>📚</span><div class="task-name"><strong>${escapeHTML(s.subject)}</strong> · ${escapeHTML(s.name)}<br><small style="color:var(--muted)">${prettyDate(s.date)}</small></div><span class="tag">${s.value}/100</span><button class="btn ghost small" data-score-del="${s.id}">削除</button></div>`).join(""):'<div class="empty">まだテスト記録がないよ。</div>';
+      document.querySelectorAll("[data-score-del]").forEach(b=>b.addEventListener("click",()=>{data.scores=data.scores.filter(s=>s.id!==b.dataset.scoreDel);persist();renderAll();}));
+    }
+    $("scoreDate").value = dateKey();
+    $("scoreForm").addEventListener("submit",e=>{
+      e.preventDefault();
+      data.scores.push({id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),subject:$("scoreSubject").value.trim(),name:$("scoreName").value.trim(),value:Math.max(0,Math.min(100,Number($("scoreValue").value))),date:$("scoreDate").value||dateKey()});
+      $("scoreForm").reset(); $("scoreDate").value=dateKey(); persist(); renderAll();
+    });
+    function renderRewards() {
+      const total=data.sessions.reduce((n,s)=>n+s.minutes,0), days=studyDates().length;
+      const awards=[["🌱","はじめの一歩",1,days,"勉強した日"],["🎀","習慣の芽",3,currentStreak(),"連続日数"],["🌸","桜マスター",7,days,"勉強した日"],["🩷","集中の天使",300,total,"累計分"],["👑","努力のプリンセス",600,total,"累計分"],["💎","きらきらスター",1000,total,"累計分"]];
+      $("rewardGrid").innerHTML=awards.map(([emoji,name,need,have,unit])=>`<div class="reward ${have>=need?"unlocked":""}"><div class="medal">${emoji}</div><strong>${name}</strong><small>${Math.min(have,need)} / ${need} ${unit}</small></div>`).join("");
+      $("summaryStats").innerHTML=`<div class="task"><span>⏳</span><div class="task-name">累計勉強時間</div><strong>${Math.floor(total/60)}時間 ${total%60}分</strong></div><div class="task"><span>🌷</span><div class="task-name">勉強した日数</div><strong>${days}日</strong></div><div class="task"><span>📈</span><div class="task-name">テスト記録数</div><strong>${data.scores.length}件</strong></div>`;
+    }
+    function renderAll() { renderHeader(); renderTasks(); renderSessions(); renderCalendar(); renderScores(); renderRewards(); }
+    let timerFinished = false;
+    function formatTime(sec) { return `${String(Math.floor(sec/60)).padStart(2,"0")}:${String(sec%60).padStart(2,"0")}`; }
+    function updateTimerUI() {
+      $("timerValue").textContent=formatTime(timerRemaining);
+      const progress=timerDuration ? (timerDuration-timerRemaining)/timerDuration*100 : 0;
+      $("timerRing").style.setProperty("--progress",progress+"%");
+      $("timerStatus").textContent=timerInterval?"集中中… ♡":timerRemaining===0?"おつかれさま！":"準備できたらスタート ♡";
+    }
+    function stopTimer(){if(timerInterval){clearInterval(timerInterval);timerInterval=null;}}
+    function tickTimer(){
+      if(timerStartedAt===null)return;
+      const elapsed=Math.floor((Date.now()-timerStartedAt)/1000);
+      timerRemaining=Math.max(0,timerDuration-timerElapsedBeforePause-elapsed);
+      updateTimerUI();
+      if(timerRemaining<=0){
+        stopTimer(); timerStartedAt=null; timerElapsedBeforePause=0;
+        data.sessions.push({date:dateKey(),minutes:Math.round(timerDuration/60),startedAt:Date.now()-timerDuration*1000,label:"集中タイマー"});
+        persist(); renderAll(); updateTimerUI();
+        alert("タイマー完了！勉強記録に追加したよ。おつかれさま 🎀");
+      }
+    }
+    $("timerStart").addEventListener("click",()=>{
+      if(timerInterval)return;
+      if(timerRemaining<=0){timerRemaining=timerDuration;timerElapsedBeforePause=0;}
+      timerStartedAt=Date.now(); timerInterval=setInterval(tickTimer,250); updateTimerUI();
+    });
+    $("timerPause").addEventListener("click",()=>{
+      if(!timerInterval)return;
+      timerElapsedBeforePause += Math.floor((Date.now()-timerStartedAt)/1000); timerStartedAt=null; stopTimer(); timerRemaining=Math.max(0,timerDuration-timerElapsedBeforePause); updateTimerUI();
+    });
+    $("timerReset").addEventListener("click",()=>{stopTimer();timerStartedAt=null;timerElapsedBeforePause=0;timerRemaining=timerDuration;updateTimerUI();});
+    document.querySelectorAll("[data-minutes]").forEach(b=>b.addEventListener("click",()=>{
+      stopTimer();timerStartedAt=null;timerElapsedBeforePause=0;timerDuration=Number(b.dataset.minutes)*60;timerRemaining=timerDuration;updateTimerUI();
+    }));
+    $("exportData").addEventListener("click",()=>{
+      const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+      const url=URL.createObjectURL(blob), a=document.createElement("a");a.href=url;a.download=`momo-study-backup-${dateKey()}.json`;a.click();URL.revokeObjectURL(url);
+    });
+    $("importFile").addEventListener("change",async e=>{
+      const file=e.target.files[0];if(!file)return;
+      try {const parsed=JSON.parse(await file.text());if(!parsed||!Array.isArray(parsed.tasks)||!Array.isArray(parsed.sessions)||!Array.isArray(parsed.scores))throw new Error("invalid");
+        if(confirm("現在のデータを読み込んだデータに置き換えますか？")){data={...defaultData(),...parsed};persist();renderAll();alert("バックアップを読み込んだよ。");}
+      } catch(err){alert("読み込みできませんでした。momo studyのバックアップJSONか確認してね。");}
+      e.target.value="";
+    });
+    $("clearData").addEventListener("click",()=>{
+      if(confirm("タスク・勉強履歴・テスト記録をすべて削除します。この操作は取り消せません。続けますか？")){data=defaultData();persist();renderAll();}
+    });
+    renderAll(); updateTimerUI();
+    if("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+      window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").then(()=>{}).catch(()=>{}));
+    }
+  </script>
+</body>
+</html>
